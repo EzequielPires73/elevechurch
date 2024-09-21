@@ -1,9 +1,12 @@
+import 'package:elevechurch/core/helpers/mask.dart';
+import 'package:elevechurch/core/helpers/validator.dart';
 import 'package:elevechurch/layers/domain/entities/user.dart';
 import 'package:elevechurch/layers/presentation/blocs/user/user_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/user/user_event.dart';
 import 'package:elevechurch/layers/presentation/blocs/user/user_state.dart';
 import 'package:elevechurch/layers/presentation/screens/user/created_user_success_page.dart';
 import 'package:elevechurch/layers/presentation/widgets/button_primary.dart';
+import 'package:elevechurch/layers/presentation/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,6 +25,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
   final TextEditingController phone = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController cpf = TextEditingController();
+  bool validatorEnabled = false;
 
   Future<void> _submit() async {
     if (formKey.currentState!.validate()) {
@@ -30,43 +34,60 @@ class _CreateUserPageState extends State<CreateUserPage> {
         email: email.text,
         cpf: cpf.text,
         phone: phone.text,
+        password: password.text,
       );
 
       if (widget.user == null) {
         context.read<UserBloc>().add(CreateUserEvent(user: user));
       }
+    } else {
+      setState(() {
+        validatorEnabled = true;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     List<Widget> fields = [
-      TextFormField(
+      CustomTextField(
         controller: name,
-        decoration: const InputDecoration(
-            label: Text('Nome'), hintText: 'Insira seu nome completo'),
+        label: 'Nome',
+        hintText: 'Insira seu nome completo',
+        validator: fieldRequired,
+        validatorEnabled: validatorEnabled,
       ),
-      TextFormField(
+      CustomTextField(
         controller: cpf,
-        decoration: const InputDecoration(
-            label: Text('CPF'), hintText: 'Insira seu CPF'),
+        label: 'CPF',
+        hintText: 'Insira seu CPF',
+        inputFormatters: [cpfFormatter],
+        validator: fieldRequired,
+        validatorEnabled: validatorEnabled,
       ),
-      TextFormField(
+      CustomTextField(
         controller: phone,
-        decoration: const InputDecoration(
-            label: Text('Telefone'), hintText: 'Insira seu telefone'),
+        label: 'Telefone',
+        hintText: 'Insira seu telefone',
+        inputFormatters: [phoneFormatter],
+        validator: fieldRequired,
+        validatorEnabled: validatorEnabled,
       ),
-      TextFormField(
+      CustomTextField(
         controller: email,
-        decoration: const InputDecoration(
-            label: Text('Email'), hintText: 'Insira seu email'),
+        label: 'Email',
+        hintText: 'Insira seu email',
+        validator: emailValidator,
+        validatorEnabled: validatorEnabled,
       ),
-      TextFormField(
+      CustomTextField(
         controller: password,
+        label: 'Senha',
+        hintText: 'Insira sua senha',
         obscureText: true,
-        decoration: const InputDecoration(
-            label: Text('Senha'), hintText: 'Insira sua senha'),
-      )
+        validator: fieldRequired,
+        validatorEnabled: validatorEnabled,
+      ),
     ];
 
     return Scaffold(
@@ -76,6 +97,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
           style: TextStyle(fontSize: 18),
         ),
       ),
+      resizeToAvoidBottomInset: true,
       body: BlocListener<UserBloc, UserState>(
         listener: (context, state) {
           if (state is UserCreatedState) {
@@ -92,15 +114,20 @@ class _CreateUserPageState extends State<CreateUserPage> {
           }
         },
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           child: Form(
             key: formKey,
-            child: ListView.separated(
-              itemBuilder: (context, index) => fields[index],
-              separatorBuilder: (context, index) => const SizedBox(
-                height: 16,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 72),
+              child: Column(
+                children: List.generate(
+                  fields.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: fields[index],
+                  ),
+                ),
               ),
-              itemCount: fields.length,
             ),
           ),
         ),

@@ -16,6 +16,8 @@ dependencies:
   flutter_bloc: ^8.1.6
   get_it: ^8.0.0
   shared_preferences: ^2.3.2
+  mask_text_input_formatter: ^2.9.0
+  form_builder_validators: ^11.0.0
 
 dev_dependencies:
   flutter_test:
@@ -28,6 +30,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/login.jpg
     - assets/oracao.png
     - assets/church.png
     - assets/logo.png

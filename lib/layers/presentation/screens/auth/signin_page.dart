@@ -1,8 +1,10 @@
+import 'package:elevechurch/core/helpers/validator.dart';
 import 'package:elevechurch/layers/presentation/blocs/auth/auth_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/auth/auth_event.dart';
 import 'package:elevechurch/layers/presentation/blocs/auth/auth_state.dart';
 import 'package:elevechurch/layers/presentation/screens/user/create_user_page.dart';
 import 'package:elevechurch/layers/presentation/widgets/button_primary.dart';
+import 'package:elevechurch/layers/presentation/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,16 +16,24 @@ class SigninPage extends StatefulWidget {
 }
 
 class _SigninPageState extends State<SigninPage> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
+  bool validatorEnabled = false;
 
   _submit() {
-    context.read<AuthBloc>().add(
-          AuthSignin(
-            email: email.text,
-            password: password.text,
-          ),
-        );
+    if (formKey.currentState!.validate()) {
+      context.read<AuthBloc>().add(
+            AuthSignin(
+              email: email.text,
+              password: password.text,
+            ),
+          );
+    } else {
+      setState(() {
+        validatorEnabled = true;
+      });
+    }
   }
 
   @override
@@ -35,35 +45,26 @@ class _SigninPageState extends State<SigninPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Erro: ${state.error}')),
             );
-          } else if (state is AuthenticatedState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('User: ${state.user?.name}')),
-            );
           }
         },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Image.network(
-                'https://portalwp.s3.amazonaws.com/wp-content/uploads/2023/06/12165840/Oracao-3.jpg',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-              ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + 48,
+              left: 16,
+              right: 16,
             ),
-            Container(
-              transform: Matrix4.translationValues(0, -24, 0),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24),
-                  topRight: Radius.circular(24),
-                ),
-              ),
-              padding: const EdgeInsets.all(24),
+            child: Form(
+              key: formKey,
               child: Column(
                 children: [
+                  Image.asset(
+                    'assets/logo.png',
+                    width: 148,
+                  ),
+                  const SizedBox(
+                    height: 48,
+                  ),
                   const SizedBox(
                     width: double.infinity,
                     child: Text(
@@ -75,33 +76,23 @@ class _SigninPageState extends State<SigninPage> {
                   const SizedBox(
                     height: 24,
                   ),
-                  TextField(
+                  CustomTextField(
                     controller: email,
-                    decoration: InputDecoration(
-                      label: const Text('Email'),
-                      hintText: 'Insira sua senha',
-                      hintStyle: const TextStyle(fontWeight: FontWeight.w400),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(width: 1),
-                      ),
-                    ),
+                    label: 'Email',
+                    hintText: 'Insira sua senha',
+                    validator: fieldRequired,
+                    validatorEnabled: validatorEnabled,
                   ),
                   const SizedBox(
                     height: 24,
                   ),
-                  TextField(
+                  CustomTextField(
                     controller: password,
+                    label: 'Senha',
+                    hintText: 'Insira sua senha',
                     obscureText: true,
-                    decoration: InputDecoration(
-                      label: const Text('Senha'),
-                      hintText: 'Insira sua senha',
-                      hintStyle: const TextStyle(fontWeight: FontWeight.w400),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(width: 1),
-                      ),
-                    ),
+                    validator: fieldRequired,
+                    validatorEnabled: validatorEnabled,
                   ),
                   const SizedBox(
                     height: 16,
@@ -156,7 +147,7 @@ class _SigninPageState extends State<SigninPage> {
                 ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

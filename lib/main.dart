@@ -10,11 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await di.init();
-  } catch (e) {
-    print("Erro na inicialização: $e");
-  }
+  await di.init();
   runApp(const App());
 }
 
@@ -49,7 +45,9 @@ class App extends StatelessWidget {
             builder: (context, state) {
               if (state is AuthenticatedState) {
                 return const HomePage();
-              } else if (state is UnauthenticatedState) {
+              } else if (state is UnauthenticatedState ||
+                  state is AuthenticationFailure ||
+                  state is AuthenticationLoading) {
                 return const SigninPage();
               }
               return const Center(
