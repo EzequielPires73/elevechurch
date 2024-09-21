@@ -11,7 +11,6 @@ class AuthRepositoryImp implements AuthRepository {
 
   @override
   Future<bool> isSignedIn() {
-    // TODO: implement signIn
     throw UnimplementedError();
   }
 
@@ -28,8 +27,12 @@ class AuthRepositoryImp implements AuthRepository {
   }
 
   @override
-  Future<void> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  Future<void> signOut() async {
+    return await datasource.signOut();
+  }
+
+  @override
+  Future<AuthResponse?> loadUser() async {
+    return await datasource.loadUser();
   }
 }

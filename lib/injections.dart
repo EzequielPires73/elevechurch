@@ -1,3 +1,4 @@
+import 'package:elevechurch/layers/domain/usecases/auth/load_user.dart';
 import 'package:get_it/get_it.dart';
 import 'package:elevechurch/layers/data/datasources/user_datasource.dart';
 import 'package:elevechurch/layers/data/datasources/auth_datasource.dart';
@@ -47,6 +48,10 @@ Future<void> init() async {
     () => CreateUser(repository: sl()),
   );
 
+  sl.registerLazySingleton<LoadUser>(
+    () => LoadUser(repository: sl()),
+  );
+
   sl.registerLazySingleton<SignIn>(
     () => SignIn(repository: sl()),
   );
@@ -62,6 +67,7 @@ Future<void> init() async {
 
   sl.registerFactory<AuthBloc>(
     () => AuthBloc(
+      loadUser: sl(),
       signIn: sl(),
       signout: sl(),
     ),
