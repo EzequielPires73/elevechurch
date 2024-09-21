@@ -1,0 +1,100 @@
+name: elevechurch
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  equatable: ^2.0.5
+  dio: ^5.7.0
+  flutter_bloc: ^8.1.6
+  get_it: ^8.0.0
+  shared_preferences: ^2.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/oracao.png
+    - assets/church.png
+    - assets/logo.png
+    - assets/logo-white.png
+    - assets/logo-light.png
+    - assets/logo-dark.png
+    - assets/logos/logo-icon-1.png
+    - assets/logos/logo-icon-2.png
+    - assets/logos/logo-1.png
+    - assets/logos/logo-2.png
+    - assets/logos/logo-3.png
+    - assets/logos/logo-4.png
+    - assets/logos/logo-5.png
+    - assets/logos/logo-6.png
+    - assets/logos/logo-7.png
+    - assets/logos/logo-8.png
+    - assets/insta01.jpg
+    - assets/insta02.jpg
+    - assets/insta03.jpg
+    - assets/insta04.jpg
+    - assets/insta05.jpg
+    - assets/insta06.jpg
+    - assets/books/books.json
+    - assets/radio_logo.jpeg
+    - assets/illustrations/error.png
+    - assets/illustrations/error-dark.png
+    - assets/illustrations/peoples.png
+    - assets/illustrations/peoples-dark.png
+    - assets/illustrations/info.png
+    - assets/illustrations/info-dark.png
+    - assets/illustrations/notices.png
+    - assets/illustrations/notices-dark.png
+    - assets/illustrations/schedule.png
+    - assets/illustrations/schedule-dark.png
+    - assets/illustrations/schedule_2.png
+    - assets/illustrations/schedule_2_dark.png
+    - assets/illustrations/stream.png
+    - assets/illustrations/stream-dark.png
+    - assets/illustrations/success.png
+    - assets/illustrations/success-dark.png
+    - assets/illustrations/update.png
+    - assets/illustrations/update-dark.png
+    - assets/illustrations/welcome.png
+    - assets/illustrations/welcome-dark.png
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/to/resolution-aware-images
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/to/asset-from-package
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package
