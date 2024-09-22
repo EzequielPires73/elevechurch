@@ -79,18 +79,30 @@ class UserModel extends User {
       'education': education,
       'maritalStatus': maritalStatus,
       'address': address,
+      'avatar': avatar,
       'password': password,
     };
   }
 
   factory UserModel.fromEntity(User user) {
-    return UserModel(
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      cpf: user.cpf,
-      phone: user.phone,
-    );
+    if (user.password != null) {
+      return UserModel(
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        cpf: user.cpf,
+        phone: user.phone,
+        password: user.password,
+      );
+    } else {
+      return UserModel(
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        cpf: user.cpf,
+        phone: user.phone,
+      );
+    }
   }
 
   User toEntity() {

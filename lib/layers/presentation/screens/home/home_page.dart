@@ -1,8 +1,8 @@
-import 'package:elevechurch/layers/presentation/blocs/auth/auth_bloc.dart';
-import 'package:elevechurch/layers/presentation/blocs/auth/auth_event.dart';
-import 'package:elevechurch/layers/presentation/blocs/auth/auth_state.dart';
+import 'package:elevechurch/core/utils/contants.dart';
+import 'package:elevechurch/layers/presentation/widgets/card_home.dart';
+import 'package:elevechurch/layers/presentation/widgets/card_programing.dart';
+import 'package:elevechurch/layers/presentation/widgets/header.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,32 +12,53 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late final AuthBloc _authBloc;
-
-  @override
-  void initState() {
-    _authBloc = context.read<AuthBloc>();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, state) => Text(
-            state.user?.name ?? '',
-            style: const TextStyle(fontSize: 18),
+      body: CustomScrollView(
+        slivers: [
+          const Header(),
+          SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverGrid.count(
+              crossAxisCount: 3,
+              childAspectRatio: 1.2,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              children: categories.map((e) => CardHome(category: e)).toList(),
+            ),
           ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => _authBloc.add(AuthLogout()),
-            icon: const Icon(Icons.logout),
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
+              child: Text('Programações'),
+            ),
           ),
+          SliverToBoxAdapter(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 92),
+              child: ListView.separated(
+                itemCount: 4,
+                separatorBuilder: (context, index) => const SizedBox(
+                  width: 16,
+                ),
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => Padding(
+                  padding: index == 0
+                      ? const EdgeInsets.only(left: 16)
+                      : index == 3
+                          ? const EdgeInsets.only(right: 16)
+                          : EdgeInsets.zero,
+                  child: const CardProgramming(),
+                ),
+              ),
+            ),
+          )
         ],
       ),
-      body: Container(),
     );
   }
 }
