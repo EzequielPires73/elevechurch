@@ -1,6 +1,7 @@
 import 'package:elevechurch/layers/domain/entities/prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/change_praying.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/create_prayer.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/find_my_prayers.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_prayers.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_prayers_by_reason.dart';
@@ -17,6 +18,7 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
   final RemovePrayer removePrayer;
   final FindPrayer findPrayer;
   final FindPrayers findPrayers;
+  final FindMyPrayers findMyPrayers;
   final FindPrayersByReason findPrayersByReason;
   final FindPraying findPraying;
   final ChangePraying changePraying;
@@ -27,11 +29,14 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     required this.removePrayer,
     required this.findPrayer,
     required this.findPrayers,
+    required this.findMyPrayers,
     required this.findPrayersByReason,
     required this.findPraying,
     required this.changePraying,
   }) : super(const PrayerInitialState()) {
     on<LoadPrayersEvent>(_loadPrayersEvent);
+    on<LoadPrayingEvent>(_loadPrayingEvent);
+    on<LoadMyPrayersEvent>(_loadMyPrayersEvent);
     on<CreatePrayerEvent>(_createPrayerEvent);
     on<UpdatePrayerEvent>(_updatePrayerEvent);
     on<FindPrayerEvent>(_findPrayerEvent);
@@ -44,6 +49,28 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     emit(PrayerLoadingState());
     try {
       List<Prayer> prayers = await findPrayers.call();
+      emit(PrayersLoadedState(prayers: prayers));
+    } catch (e) {
+      emit(PrayerErrorState(error: e.toString()));
+    }
+  }
+
+  Future<void> _loadPrayingEvent(
+      LoadPrayingEvent event, Emitter<PrayerState> emit) async {
+    emit(PrayerLoadingState());
+    try {
+      List<Prayer> prayers = await findPraying.call();
+      emit(PrayersLoadedState(prayers: prayers));
+    } catch (e) {
+      emit(PrayerErrorState(error: e.toString()));
+    }
+  }
+
+  Future<void> _loadMyPrayersEvent(
+      LoadMyPrayersEvent event, Emitter<PrayerState> emit) async {
+    emit(PrayerLoadingState());
+    try {
+      List<Prayer> prayers = await findMyPrayers.call();
       emit(PrayersLoadedState(prayers: prayers));
     } catch (e) {
       emit(PrayerErrorState(error: e.toString()));
@@ -101,7 +128,11 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     ));
     try {
       await changePraying.call(event.id);
-      List<Prayer> prayers = await findPrayers.call();
+      List<Prayer> prayers = event.listPraying == true
+          ? await findPraying.call()
+          : event.listPraying == true
+              ? await findMyPrayers.call()
+              : await findPrayers.call();
       emit(PrayersLoadedState(prayers: prayers));
     } catch (e) {
       emit(PrayerErrorState(error: e.toString()));

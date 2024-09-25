@@ -1,4 +1,8 @@
 import 'package:elevechurch/core/utils/contants.dart';
+import 'package:elevechurch/layers/data/models/user_model.dart';
+import 'package:elevechurch/layers/domain/entities/prayer.dart';
+import 'package:elevechurch/layers/domain/entities/user.dart';
+import 'package:elevechurch/layers/presentation/blocs/auth/auth_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_event.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_state.dart';
@@ -17,8 +21,14 @@ class PrayersPage extends StatefulWidget {
 }
 
 class _PrayersPageState extends State<PrayersPage> {
+  late final User? user;
+  List<Prayer> prayers = [];
+  bool isLoading = true;
+  int? cardLoading;
+
   @override
   void initState() {
+    user = context.read<AuthBloc>().state.user;
     loadPrayers();
     super.initState();
   }
@@ -40,8 +50,14 @@ class _PrayersPageState extends State<PrayersPage> {
               childAspectRatio: 1.6,
               crossAxisSpacing: 8,
               mainAxisSpacing: 8,
-              children:
-                  prayersCategories.map((e) => CardHome(category: e)).toList(),
+              children: prayersCategories
+                  .map((e) => CardHome(
+                        category: e,
+                        onPress: () async {
+                          loadPrayers();
+                        },
+                      ))
+                  .toList(),
             ),
           ),
           SliverToBoxAdapter(
@@ -55,38 +71,62 @@ class _PrayersPageState extends State<PrayersPage> {
               child: const Text('Orações adicionadas recentemente'),
             ),
           ),
-          BlocBuilder<PrayerBloc, PrayerState>(
-            builder: (context, state) {
-              if (state is PrayersLoadedState) {
-                return SliverPadding(
-                  padding: const EdgeInsets.only(
-                    left: 16,
-                    right: 16,
-                    bottom: 16,
-                  ),
-                  sliver: SliverList.separated(
-                    itemCount: state.prayers.length,
-                    itemBuilder: (context, index) => CardPrayer(
-                      prayer: state.prayers[index],
-                      isPraying: false,
-                      onPraying: () {},
-                    ),
-                    separatorBuilder: (context, index) => const SizedBox(
-                      height: 16,
-                    ),
-                  ),
-                );
-              } else if (state is PrayerLoadingState ||
-                  state is PrayerCardLoadingState) {
-                return const SliverToBoxAdapter(
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              } else {
-                return const SliverToBoxAdapter();
+          BlocListener<PrayerBloc, PrayerState>(
+            listener: (context, state) {
+              if (state is PrayerLoadingState) {
+                setState(() {
+                  isLoading = true;
+                });
+              } else if (state is PrayersLoadedState) {
+                setState(() {
+                  prayers = state.prayers;
+                  cardLoading = null;
+                  isLoading = false;
+                });
+              } else if (state is PrayerCardLoadingState) {
+                setState(() {
+                  cardLoading = state.id;
+                });
               }
             },
+            child: SliverPadding(
+              padding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: 16,
+              ),
+              sliver: isLoading
+                  ? SliverList.separated(
+                      itemCount: 3,
+                      itemBuilder: (context, index) =>
+                          const CardPrayerSkeleton(),
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 16,
+                      ),
+                    )
+                  : SliverList.separated(
+                      itemCount: prayers.length,
+                      itemBuilder: (context, index) {
+                        var isPraying = prayers[index]
+                                .praying
+                                ?.firstWhere(
+                                  (e) => e.id == user?.id,
+                                  orElse: () =>
+                                      UserModel(id: 0, name: '', email: ''),
+                                )
+                                .id ==
+                            user?.id;
+                        return CardPrayer(
+                          prayer: prayers[index],
+                          isPraying: isPraying,
+                          isLoading: cardLoading == prayers[index].id,
+                        );
+                      },
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 16,
+                      ),
+                    ),
+            ),
           ),
         ],
       ),

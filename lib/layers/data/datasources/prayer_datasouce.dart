@@ -26,7 +26,7 @@ class PrayerDatasouceImp extends PrayerDatasouce {
 
   @override
   Future<List<PrayerModel>> findMyPrayers() async {
-    final response = await apiService.get('prayers');
+    final response = await apiService.get('public/prayers/my');
     var results = response['data'] as List;
 
     return results.map((json) => PrayerModel.fromJson(json)).toList();
@@ -34,7 +34,7 @@ class PrayerDatasouceImp extends PrayerDatasouce {
 
   @override
   Future<PrayerModel> findPrayer(String id) async {
-    final response = await apiService.get('prayers');
+    final response = await apiService.get('prayers/$id');
 
     return PrayerModel.fromJson(response['data']);
   }
@@ -57,7 +57,7 @@ class PrayerDatasouceImp extends PrayerDatasouce {
 
   @override
   Future<List<PrayerModel>> findPraying() async {
-    final response = await apiService.get('prayers');
+    final response = await apiService.get('public/prayers/list');
     var results = response['data'] as List;
 
     return results.map((json) => PrayerModel.fromJson(json)).toList();

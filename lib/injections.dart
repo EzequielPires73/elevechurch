@@ -130,14 +130,17 @@ Future<void> init() async {
     ),
   );
 
-  sl.registerLazySingleton<PrayerBloc>(() => PrayerBloc(
-        createPrayer: sl(),
-        updatePrayer: sl(),
-        removePrayer: sl(),
-        findPrayer: sl(),
-        findPrayers: sl(),
-        findPrayersByReason: sl(),
-        findPraying: sl(),
-        changePraying: sl(),
-      ));
+  sl.registerLazySingleton<PrayerBloc>(
+    () => PrayerBloc(
+      createPrayer: sl(),
+      updatePrayer: sl(),
+      removePrayer: sl(),
+      findPrayer: sl(),
+      findPrayers: sl(),
+      findPrayersByReason: sl(),
+      findPraying: sl(),
+      changePraying: sl(),
+      findMyPrayers: sl(),
+    ),
+  );
 }

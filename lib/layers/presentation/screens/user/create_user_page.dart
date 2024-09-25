@@ -91,6 +91,7 @@ class _CreateUserPageState extends State<CreateUserPage> {
     ];
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
           'Cadastrar conta',

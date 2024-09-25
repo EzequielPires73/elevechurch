@@ -1,25 +1,27 @@
 import 'package:elevechurch/core/helpers/date.dart';
-import 'package:elevechurch/layers/data/models/user_model.dart';
 import 'package:elevechurch/layers/data/repositories/prayer_repository_imp.dart';
 import 'package:elevechurch/layers/domain/entities/prayer.dart';
-import 'package:elevechurch/layers/domain/entities/user.dart';
-import 'package:elevechurch/layers/presentation/blocs/auth/auth_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_event.dart';
 import 'package:elevechurch/layers/presentation/screens/prayers/view_prayer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CardPrayer extends StatefulWidget {
   final Prayer prayer;
   final bool isPraying;
-  final Function()? onPraying;
+  final bool isLoading;
+  final bool? listPraying;
+  final bool? listMyPrayers;
 
   const CardPrayer({
     super.key,
     required this.prayer,
     required this.isPraying,
-    this.onPraying,
+    this.isLoading = false,
+    this.listPraying,
+    this.listMyPrayers,
   });
 
   @override
@@ -27,24 +29,14 @@ class CardPrayer extends StatefulWidget {
 }
 
 class _CardPrayerState extends State<CardPrayer> {
-  late final User? user;
-  bool isPraying = false;
-
-  @override
-  void initState() {
-    user = context.read<AuthBloc>().state.user;
-    isPraying = widget.prayer.praying
-            ?.firstWhere(
-              (e) => e.id == user?.id,
-              orElse: () => UserModel(id: 0, name: '', email: ''),
-            )
-            .id ==
-        user?.id;
-    super.initState();
-  }
-
   Future<void> changePraying() async {
-    context.read<PrayerBloc>().add(ChangePrayingEvent(id: widget.prayer.id!));
+    context.read<PrayerBloc>().add(
+          ChangePrayingEvent(
+            id: widget.prayer.id!,
+            listPraying: widget.listPraying,
+            listMyPrayers: widget.listMyPrayers,
+          ),
+        );
   }
 
   @override
@@ -55,13 +47,16 @@ class _CardPrayerState extends State<CardPrayer> {
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.zero,
       child: InkWell(
-        onTap: () => Navigator.push(
+        onTap: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => ViewPrayerPage(
                 prayer: widget.prayer,
               ),
-            )),
+            ),
+          );
+        },
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
@@ -127,31 +122,31 @@ class _CardPrayerState extends State<CardPrayer> {
                       color: isDark ? Colors.amber.shade600 : Colors.black87,
                     ),
                   ),
-                  isPraying
+                  widget.isPraying
                       ? FilledButton.icon(
-                          onPressed: changePraying,
+                          onPressed: widget.isLoading ? null : changePraying,
                           icon: const Icon(Icons.favorite),
-                          label: const Text(
-                            'Orando',
-                            style: TextStyle(
+                          label: Text(
+                            widget.isLoading ? 'Atualizando...' : 'Orando',
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                         )
                       : OutlinedButton(
-                          onPressed: changePraying,
-                          child: const Row(
+                          onPressed: widget.isLoading ? null : changePraying,
+                          child: Row(
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.favorite_border_outlined,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: 8,
                               ),
                               Text(
-                                'Orar',
-                                style: TextStyle(
+                                widget.isLoading ? 'Atualizando...' : 'Orar',
+                                style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -169,26 +164,80 @@ class _CardPrayerState extends State<CardPrayer> {
   }
 }
 
-/* class CardPrayer extends StatelessWidget {
-  final Prayer prayer;
-  final bool isPraying;
-  final User? user;
-  final Function()? onPraying;
-
-  const CardPrayer({
-    super.key,
-    required this.prayer,
-    required this.isPraying,
-    this.onPraying,
-    this.user,
-  });
+class CardPrayerSkeleton extends StatelessWidget {
+  const CardPrayerSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    
-    
+    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
-    
+    return Shimmer.fromColors(
+      baseColor: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
+      highlightColor: isDark ? Colors.grey.shade500 : Colors.grey.shade100,
+      child: Card.filled(
+        clipBehavior: Clip.antiAlias,
+        margin: EdgeInsets.zero,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 100,
+                height: 16,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: 120,
+                height: 16,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: 160,
+                height: 14,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                height: 14,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                height: 14,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 80,
+                    height: 12,
+                    color: Colors.grey,
+                  ),
+                  Container(
+                    width: 80,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
- */

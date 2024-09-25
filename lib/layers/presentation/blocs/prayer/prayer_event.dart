@@ -6,6 +6,10 @@ abstract class PrayerEvent {
 
 class LoadPrayersEvent extends PrayerEvent {}
 
+class LoadPrayingEvent extends PrayerEvent {}
+
+class LoadMyPrayersEvent extends PrayerEvent {}
+
 class CreatePrayerEvent extends PrayerEvent {
   final Prayer prayer;
 
@@ -33,6 +37,12 @@ class DeletePrayerEvent extends PrayerEvent {
 
 class ChangePrayingEvent extends PrayerEvent {
   final int id;
+  final bool? listPraying;
+  final bool? listMyPrayers;
 
-  ChangePrayingEvent({required this.id});
+  ChangePrayingEvent({
+    required this.id,
+    this.listMyPrayers,
+    this.listPraying,
+  });
 }

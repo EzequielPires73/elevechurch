@@ -7,6 +7,8 @@ import 'package:elevechurch/layers/presentation/screens/events/events_page.dart'
 import 'package:elevechurch/layers/presentation/screens/lives/lives_page.dart';
 import 'package:elevechurch/layers/presentation/screens/ministries/ministries_page.dart';
 import 'package:elevechurch/layers/presentation/screens/pastoral_agenda/pastoral_agenda_page.dart';
+import 'package:elevechurch/layers/presentation/screens/prayers/list_prayers_page.dart';
+import 'package:elevechurch/layers/presentation/screens/prayers/my_prayers_page.dart';
 import 'package:elevechurch/layers/presentation/screens/publications/publications_page.dart';
 import 'package:flutter/material.dart';
 
@@ -60,11 +62,13 @@ List<CategoryHome> categories = [
 
 List<CategoryHome> prayersCategories = [
   const CategoryHome(
-      title: 'Minha Lista de oração',
-      icon: Icons.format_list_bulleted_outlined,
-      screen: Scaffold()),
+    title: 'Orando',
+    icon: Icons.format_list_bulleted_outlined,
+    screen: ListPrayersPage(),
+  ),
   const CategoryHome(
-      title: 'Meus pedidos',
-      icon: Icons.diversity_1_outlined,
-      screen: Scaffold()),
+    title: 'Meus pedidos',
+    icon: Icons.diversity_1_outlined,
+    screen: MyPrayersPage(),
+  ),
 ];
