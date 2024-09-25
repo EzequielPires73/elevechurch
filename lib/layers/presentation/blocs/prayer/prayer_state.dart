@@ -10,6 +10,12 @@ class PrayerInitialState extends PrayerState {
 
 class PrayerLoadingState extends PrayerState {}
 
+class PrayerCardLoadingState extends PrayerState {
+  final int id;
+
+  PrayerCardLoadingState({required this.id});
+}
+
 class PrayerCreatedState extends PrayerState {
   final Prayer prayer;
 

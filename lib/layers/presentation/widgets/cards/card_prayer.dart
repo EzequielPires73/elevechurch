@@ -1,10 +1,16 @@
 import 'package:elevechurch/core/helpers/date.dart';
+import 'package:elevechurch/layers/data/models/user_model.dart';
 import 'package:elevechurch/layers/data/repositories/prayer_repository_imp.dart';
 import 'package:elevechurch/layers/domain/entities/prayer.dart';
+import 'package:elevechurch/layers/domain/entities/user.dart';
+import 'package:elevechurch/layers/presentation/blocs/auth/auth_bloc.dart';
+import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_bloc.dart';
+import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_event.dart';
 import 'package:elevechurch/layers/presentation/screens/prayers/view_prayer_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CardPrayer extends StatelessWidget {
+class CardPrayer extends StatefulWidget {
   final Prayer prayer;
   final bool isPraying;
   final Function()? onPraying;
@@ -15,6 +21,31 @@ class CardPrayer extends StatelessWidget {
     required this.isPraying,
     this.onPraying,
   });
+
+  @override
+  State<CardPrayer> createState() => _CardPrayerState();
+}
+
+class _CardPrayerState extends State<CardPrayer> {
+  late final User? user;
+  bool isPraying = false;
+
+  @override
+  void initState() {
+    user = context.read<AuthBloc>().state.user;
+    isPraying = widget.prayer.praying
+            ?.firstWhere(
+              (e) => e.id == user?.id,
+              orElse: () => UserModel(id: 0, name: '', email: ''),
+            )
+            .id ==
+        user?.id;
+    super.initState();
+  }
+
+  Future<void> changePraying() async {
+    context.read<PrayerBloc>().add(ChangePrayingEvent(id: widget.prayer.id!));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +59,7 @@ class CardPrayer extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => ViewPrayerPage(
-                prayer: prayer,
+                prayer: widget.prayer,
               ),
             )),
         child: Container(
@@ -45,7 +76,7 @@ class CardPrayer extends StatelessWidget {
                 ),
                 child: Text(
                   reasonOptions
-                      .firstWhere((e) => e.enumValue == prayer.reason)
+                      .firstWhere((e) => e.enumValue == widget.prayer.reason)
                       .name,
                   style: TextStyle(
                     fontSize: 12,
@@ -57,18 +88,18 @@ class CardPrayer extends StatelessWidget {
               const SizedBox(
                 height: 8,
               ),
-              prayer.user != null
+              widget.prayer.user != null
                   ? Text(
-                      prayer.user?.name ?? '',
+                      widget.prayer.user?.name ?? '',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     )
                   : Container(),
-              prayer.user?.congregation?.name != null
+              widget.prayer.user?.congregation?.name != null
                   ? Text(
-                      prayer.user?.congregation?.name ?? '',
+                      widget.prayer.user?.congregation?.name ?? '',
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -76,7 +107,7 @@ class CardPrayer extends StatelessWidget {
                     )
                   : Container(),
               Text(
-                prayer.description,
+                widget.prayer.description,
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w300,
@@ -87,8 +118,8 @@ class CardPrayer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    prayer.createdAt != null
-                        ? formatFullDate(prayer.createdAt!)
+                    widget.prayer.createdAt != null
+                        ? formatFullDate(widget.prayer.createdAt!)
                         : '',
                     style: TextStyle(
                       fontSize: 12,
@@ -98,7 +129,7 @@ class CardPrayer extends StatelessWidget {
                   ),
                   isPraying
                       ? FilledButton.icon(
-                          onPressed: () {},
+                          onPressed: changePraying,
                           icon: const Icon(Icons.favorite),
                           label: const Text(
                             'Orando',
@@ -109,7 +140,7 @@ class CardPrayer extends StatelessWidget {
                           ),
                         )
                       : OutlinedButton(
-                          onPressed: () {},
+                          onPressed: changePraying,
                           child: const Row(
                             children: [
                               Icon(
@@ -137,3 +168,27 @@ class CardPrayer extends StatelessWidget {
     );
   }
 }
+
+/* class CardPrayer extends StatelessWidget {
+  final Prayer prayer;
+  final bool isPraying;
+  final User? user;
+  final Function()? onPraying;
+
+  const CardPrayer({
+    super.key,
+    required this.prayer,
+    required this.isPraying,
+    this.onPraying,
+    this.user,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    
+    
+
+    
+  }
+}
+ */

@@ -76,7 +76,8 @@ class _PrayersPageState extends State<PrayersPage> {
                     ),
                   ),
                 );
-              } else if (state is PrayerLoadingState) {
+              } else if (state is PrayerLoadingState ||
+                  state is PrayerCardLoadingState) {
                 return const SliverToBoxAdapter(
                   child: Center(
                     child: CircularProgressIndicator(),

@@ -9,4 +9,5 @@ abstract class PrayerRepository {
   Future<List<Prayer>> findPrayers();
   Future<List<Prayer>> findMyPrayers();
   Future<List<Prayer>> findPraying();
+  Future<Prayer> changePraying(int id);
 }

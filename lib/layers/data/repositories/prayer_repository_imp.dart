@@ -73,14 +73,22 @@ class PrayerRepositoryImp extends PrayerRepository {
 
   @override
   Future<bool> removePrayer(String id) {
-    // TODO: implement removePrayer
     throw UnimplementedError();
   }
 
   @override
   Future<Prayer> updatePrayer(String id, Prayer prayer) {
-    // TODO: implement updatePrayer
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Prayer> changePraying(int id) async {
+    try {
+      final response = await datasource.changePraying(id);
+      return response;
+    } on ServerException catch (e) {
+      throw ServerFailure(message: e.message);
+    }
   }
 }
 
