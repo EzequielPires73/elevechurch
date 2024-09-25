@@ -2,9 +2,9 @@ import 'package:elevechurch/injections.dart' as di;
 import 'package:elevechurch/layers/presentation/blocs/auth/auth_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/auth/auth_event.dart';
 import 'package:elevechurch/layers/presentation/blocs/auth/auth_state.dart';
+import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/user/user_bloc.dart';
 import 'package:elevechurch/layers/presentation/screens/auth/signin_page.dart';
-import 'package:elevechurch/layers/presentation/screens/home/home_page.dart';
 import 'package:elevechurch/layers/presentation/screens/navigation/navigation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +25,9 @@ class App extends StatelessWidget {
         BlocProvider<UserBloc>(
           create: (_) => di.sl<UserBloc>(),
         ),
+        BlocProvider<PrayerBloc>(
+          create: (_) => di.sl<PrayerBloc>(),
+        ),
         BlocProvider<AuthBloc>(
           create: (_) => di.sl<AuthBloc>()..add(AuthLoadUser()),
         ),
@@ -33,22 +36,25 @@ class App extends StatelessWidget {
           title: 'Eleve Church',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
-            scaffoldBackgroundColor: Colors.grey[100],
-            useMaterial3: true,
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.white,
-              shadowColor: Colors.black38,
-              elevation: 4,
-            ),
-            cardTheme: const CardTheme(
-              color: Colors.white,
-            ),
-            navigationBarTheme: const NavigationBarThemeData(
-              backgroundColor: Colors.white,
-            ),
-          ),
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+              scaffoldBackgroundColor: Colors.grey[100],
+              useMaterial3: true,
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Colors.white,
+                surfaceTintColor: Colors.white,
+                shadowColor: Colors.black38,
+                elevation: 4,
+              ),
+              cardTheme: const CardTheme(
+                color: Colors.white,
+              ),
+              navigationBarTheme: const NavigationBarThemeData(
+                backgroundColor: Colors.white,
+              ),
+              bottomAppBarTheme: const BottomAppBarTheme(
+                color: Colors.white,
+                surfaceTintColor: Colors.white,
+              )),
           home: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
               if (state is AuthenticatedState) {

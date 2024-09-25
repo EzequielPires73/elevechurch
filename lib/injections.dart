@@ -1,4 +1,16 @@
+import 'package:elevechurch/layers/data/datasources/prayer_datasouce.dart';
+import 'package:elevechurch/layers/data/repositories/prayer_repository_imp.dart';
+import 'package:elevechurch/layers/domain/repositories/prayer_repository.dart';
 import 'package:elevechurch/layers/domain/usecases/auth/load_user.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/create_prayer.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/find_my_prayers.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/find_prayer.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/find_prayers.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/find_prayers_by_reason.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/find_praying.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/remove_prayer.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/update_prayer.dart';
+import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:elevechurch/layers/data/datasources/user_datasource.dart';
 import 'package:elevechurch/layers/data/datasources/auth_datasource.dart';
@@ -34,6 +46,10 @@ Future<void> init() async {
     () => AuthDatasourceImp(apiService: sl()),
   );
 
+  sl.registerLazySingleton<PrayerDatasouce>(
+    () => PrayerDatasouceImp(apiService: sl()),
+  );
+
   // Repositories
   sl.registerLazySingleton<UserRepository>(
     () => UserRepositoryImp(datasource: sl()),
@@ -41,6 +57,10 @@ Future<void> init() async {
 
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImp(datasource: sl()),
+  );
+
+  sl.registerLazySingleton<PrayerRepository>(
+    () => PrayerRepositoryImp(datasource: sl()),
   );
 
   // Use Cases
@@ -60,6 +80,38 @@ Future<void> init() async {
     () => SignOut(repository: sl()),
   );
 
+  sl.registerLazySingleton<CreatePrayer>(
+    () => CreatePrayer(repository: sl()),
+  );
+
+  sl.registerLazySingleton<UpdatePrayer>(
+    () => UpdatePrayer(repository: sl()),
+  );
+
+  sl.registerLazySingleton<RemovePrayer>(
+    () => RemovePrayer(repository: sl()),
+  );
+
+  sl.registerLazySingleton<FindPrayer>(
+    () => FindPrayer(repository: sl()),
+  );
+
+  sl.registerLazySingleton<FindPrayers>(
+    () => FindPrayers(repository: sl()),
+  );
+
+  sl.registerLazySingleton<FindPrayersByReason>(
+    () => FindPrayersByReason(repository: sl()),
+  );
+
+  sl.registerLazySingleton<FindMyPrayers>(
+    () => FindMyPrayers(repository: sl()),
+  );
+
+  sl.registerLazySingleton<FindPraying>(
+    () => FindPraying(repository: sl()),
+  );
+
   // Blocs
   sl.registerFactory<UserBloc>(
     () => UserBloc(createUser: sl()),
@@ -72,4 +124,14 @@ Future<void> init() async {
       signout: sl(),
     ),
   );
+
+  sl.registerLazySingleton<PrayerBloc>(() => PrayerBloc(
+        createPrayer: sl(),
+        updatePrayer: sl(),
+        removePrayer: sl(),
+        findPrayer: sl(),
+        findPrayers: sl(),
+        findPrayersByReason: sl(),
+        findPraying: sl(),
+      ));
 }

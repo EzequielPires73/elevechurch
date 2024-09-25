@@ -1,5 +1,8 @@
+import 'package:elevechurch/layers/presentation/screens/bible/bible_page.dart';
 import 'package:elevechurch/layers/presentation/screens/home/home_page.dart';
+import 'package:elevechurch/layers/presentation/screens/prayers/prayers_page.dart';
 import 'package:elevechurch/layers/presentation/screens/profile/profile_page.dart';
+import 'package:elevechurch/layers/presentation/screens/radio/radio_page.dart';
 import 'package:flutter/material.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -13,9 +16,9 @@ class _NavigationPageState extends State<NavigationPage> {
   int selectedIndex = 0;
   static const List<Widget> pages = [
     HomePage(),
-    HomePage(),
-    HomePage(),
-    HomePage(),
+    RadioPage(),
+    PrayersPage(),
+    BiblePage(),
     ProfilePage(),
   ];
 

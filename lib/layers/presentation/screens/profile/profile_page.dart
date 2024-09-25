@@ -22,7 +22,6 @@ class _ProfilePageState extends State<ProfilePage> {
         SliverToBoxAdapter(
           child: Column(
             children: [
-              const Divider(indent: 20, endIndent: 20),
               ListTile(
                 leading: const Icon(Icons.edit_outlined),
                 title: const Text('Editar dados'),

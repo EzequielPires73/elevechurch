@@ -1,6 +1,6 @@
 import 'package:elevechurch/core/utils/contants.dart';
-import 'package:elevechurch/layers/presentation/widgets/card_home.dart';
-import 'package:elevechurch/layers/presentation/widgets/card_programing.dart';
+import 'package:elevechurch/layers/presentation/widgets/cards/card_home.dart';
+import 'package:elevechurch/layers/presentation/widgets/cards/card_programing.dart';
 import 'package:elevechurch/layers/presentation/widgets/header.dart';
 import 'package:flutter/material.dart';
 

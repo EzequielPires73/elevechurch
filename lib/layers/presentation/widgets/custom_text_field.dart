@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
   final bool validatorEnabled;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
+  final int? maxLines;
 
   const CustomTextField({
     super.key,
@@ -20,6 +21,7 @@ class CustomTextField extends StatefulWidget {
     this.inputFormatters,
     this.validator,
     this.validatorEnabled = false,
+    this.maxLines = 1,
   });
 
   @override
@@ -53,11 +55,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
         TextFormField(
           controller: widget.controller,
           obscureText: _obscureText,
+          maxLines: widget.maxLines,
           inputFormatters: widget.inputFormatters,
           validator: widget.validator,
           autovalidateMode: widget.validatorEnabled
               ? AutovalidateMode.onUserInteraction
               : null,
+          onTapOutside: (event) => FocusScope.of(context).unfocus(),
           decoration: InputDecoration(
             hintText: widget.hintText ?? 'Insira sua senha',
             hintStyle: const TextStyle(fontWeight: FontWeight.w400),

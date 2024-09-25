@@ -50,31 +50,32 @@ class _SigninPageState extends State<SigninPage> {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top + 48,
+              top: MediaQuery.of(context).padding.top + 120,
               left: 16,
               right: 16,
             ),
             child: Form(
               key: formKey,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
                     'assets/logo.png',
-                    width: 148,
+                    width: 180,
                   ),
                   const SizedBox(
-                    height: 48,
+                    height: 16,
                   ),
                   const SizedBox(
                     width: double.infinity,
                     child: Text(
                       'Entre na sua conta',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
                   ),
                   const SizedBox(
-                    height: 24,
+                    height: 16,
                   ),
                   CustomTextField(
                     controller: email,

@@ -57,3 +57,14 @@ List<CategoryHome> categories = [
     screen: EbdPage(),
   ),
 ];
+
+List<CategoryHome> prayersCategories = [
+  const CategoryHome(
+      title: 'Minha Lista de oração',
+      icon: Icons.format_list_bulleted_outlined,
+      screen: Scaffold()),
+  const CategoryHome(
+      title: 'Meus pedidos',
+      icon: Icons.diversity_1_outlined,
+      screen: Scaffold()),
+];

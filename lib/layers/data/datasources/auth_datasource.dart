@@ -24,8 +24,10 @@ class AuthDatasourceImp implements AuthDatasource {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User user = UserModel.fromJson(response['user']);
+    String token = response['access_token'];
     prefs.setString('user', jsonEncode(user));
-    prefs.setString('access_token', response['access_token']);
+    prefs.setString('access_token', token);
+    apiService.dio.options.headers["Authorization"] = 'Bearer $token';
 
     return AuthResponse(
       token: response['access_token'],
@@ -45,8 +47,9 @@ class AuthDatasourceImp implements AuthDatasource {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? userData = prefs.getString('user');
     final String? token = prefs.getString('access_token');
-
+    print(userData);
     if (userData != null && token != null) {
+      apiService.dio.options.headers["Authorization"] = 'Bearer $token';
       return AuthResponse(
         token: token,
         user: UserModel.fromJson(

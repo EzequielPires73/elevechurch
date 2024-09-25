@@ -63,25 +63,62 @@ class UserModel extends User {
   }
 
   toJson() {
-    return {
-      'name': name,
-      'email': email,
-      'cpf': cpf,
-      'rg': rg,
-      'profession': profession,
-      'birthday': birthday,
-      'dateBaptism': dateBaptism,
-      'memberSince': memberSince,
-      'phone': phone,
-      'gender': gender,
-      'congregationId': congregation?.id,
-      'positionId': ecclesiasticalPosition,
-      'education': education,
-      'maritalStatus': maritalStatus,
-      'address': address,
-      'avatar': avatar,
-      'password': password,
-    };
+    final Map<String, dynamic> data = {};
+
+    data['name'] = name;
+    if (email != null) {
+      data['email'] = email;
+    }
+    if (cpf != null) {
+      data['cpf'] = cpf;
+    }
+    if (rg != null) {
+      data['rg'] = rg;
+    }
+    if (profession != null) {
+      data['profession'] = profession;
+    }
+    if (birthday != null) {
+      data['birthday'] = birthday;
+    }
+    if (dateBaptism != null) {
+      data['dateBaptism'] = dateBaptism;
+    }
+    if (memberSince != null) {
+      data['memberSince'] = memberSince;
+    }
+    if (phone != null) {
+      data['phone'] = phone;
+    }
+    if (gender != null) {
+      data['gender'] = gender;
+    }
+    if (congregation?.id != null) {
+      data['congregationId'] = congregation?.id;
+    }
+    if (education != null) {
+      data['education'] = education;
+    }
+    if (maritalStatus != null) {
+      data['maritalStatus'] = maritalStatus;
+    }
+    if (address != null) {
+      data['address'] = address;
+    }
+    if (avatar != null) {
+      data['avatar'] = avatar;
+    }
+    if (password != null) {
+      data['password'] = password;
+    }
+    if (id != null) {
+      data['id'] = id;
+    }
+    if (ecclesiasticalPosition != null) {
+      data['positionId'] = ecclesiasticalPosition;
+    }
+
+    return data;
   }
 
   factory UserModel.fromEntity(User user) {
