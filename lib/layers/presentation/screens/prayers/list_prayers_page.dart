@@ -48,7 +48,7 @@ class _ListPrayersPageState extends State<ListPrayersPage> {
             setState(() {
               isLoading = true;
             });
-          } else if (state is PrayersLoadedState) {
+          } else if (state is PrayingLoadedState) {
             setState(() {
               prayers = state.prayers;
               cardLoading = null;

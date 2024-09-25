@@ -36,6 +36,18 @@ class PrayersLoadedState extends PrayerState {
   const PrayersLoadedState({required this.prayers});
 }
 
+class MyPrayersLoadedState extends PrayerState {
+  final List<Prayer> prayers;
+
+  const MyPrayersLoadedState({required this.prayers});
+}
+
+class PrayingLoadedState extends PrayerState {
+  final List<Prayer> prayers;
+
+  const PrayingLoadedState({required this.prayers});
+}
+
 class PrayerFoundState extends PrayerState {
   final Prayer prayer;
 

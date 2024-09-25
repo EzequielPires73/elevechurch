@@ -60,7 +60,7 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     emit(PrayerLoadingState());
     try {
       List<Prayer> prayers = await findPraying.call();
-      emit(PrayersLoadedState(prayers: prayers));
+      emit(PrayingLoadedState(prayers: prayers));
     } catch (e) {
       emit(PrayerErrorState(error: e.toString()));
     }
@@ -71,7 +71,7 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     emit(PrayerLoadingState());
     try {
       List<Prayer> prayers = await findMyPrayers.call();
-      emit(PrayersLoadedState(prayers: prayers));
+      emit(MyPrayersLoadedState(prayers: prayers));
     } catch (e) {
       emit(PrayerErrorState(error: e.toString()));
     }
@@ -128,12 +128,16 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     ));
     try {
       await changePraying.call(event.id);
-      List<Prayer> prayers = event.listPraying == true
-          ? await findPraying.call()
-          : event.listPraying == true
-              ? await findMyPrayers.call()
-              : await findPrayers.call();
-      emit(PrayersLoadedState(prayers: prayers));
+      if (event.listMyPrayers == true) {
+        List<Prayer> prayers = await findMyPrayers.call();
+        emit(MyPrayersLoadedState(prayers: prayers));
+      } else if (event.listPraying == true) {
+        List<Prayer> prayers = await findPraying.call();
+        emit(PrayingLoadedState(prayers: prayers));
+      } else {
+        List<Prayer> prayers = await findPrayers.call();
+        emit(PrayersLoadedState(prayers: prayers));
+      }
     } catch (e) {
       emit(PrayerErrorState(error: e.toString()));
     }

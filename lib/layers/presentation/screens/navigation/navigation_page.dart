@@ -33,6 +33,8 @@ class _NavigationPageState extends State<NavigationPage> {
     return Scaffold(
       body: pages[selectedIndex],
       bottomNavigationBar: NavigationBar(
+        elevation: 4,
+        shadowColor: Colors.black12,
         onDestinationSelected: (int index) {
           setState(() {
             selectedIndex = index;
