@@ -6,7 +6,7 @@ class UpdatePrayer {
 
   UpdatePrayer({required this.repository});
 
-  Future<Prayer> call(String id, Prayer prayer) async {
+  Future<Prayer> call(int id, Prayer prayer) async {
     return await repository.updatePrayer(id, prayer);
   }
 }

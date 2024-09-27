@@ -3,7 +3,7 @@ import 'package:elevechurch/layers/data/models/prayer_model.dart';
 
 abstract class PrayerDatasouce {
   Future<PrayerModel> createPrayer(PrayerModel prayer);
-  Future<PrayerModel> findPrayer(String id);
+  Future<PrayerModel> findPrayer(int id);
   Future<List<PrayerModel>> findPrayersByReason(String reason);
   Future<PrayerModel> updatePrayer(String id, PrayerModel prayer);
   Future<bool> removePrayer(String id);
@@ -11,6 +11,7 @@ abstract class PrayerDatasouce {
   Future<List<PrayerModel>> findMyPrayers();
   Future<List<PrayerModel>> findPraying();
   Future<PrayerModel> changePraying(int id);
+  Future<PrayerModel> commentPrayer(int id, String message);
 }
 
 class PrayerDatasouceImp extends PrayerDatasouce {
@@ -33,7 +34,7 @@ class PrayerDatasouceImp extends PrayerDatasouce {
   }
 
   @override
-  Future<PrayerModel> findPrayer(String id) async {
+  Future<PrayerModel> findPrayer(int id) async {
     final response = await apiService.get('prayers/$id');
 
     return PrayerModel.fromJson(response['data']);
@@ -84,5 +85,14 @@ class PrayerDatasouceImp extends PrayerDatasouce {
         await apiService.post('public/prayers/praying/$id', data: null);
 
     return PrayerModel.fromJson(response['data']);
+  }
+
+  @override
+  Future<PrayerModel> commentPrayer(int id, String message) async {
+    await apiService.post('prayer-comments', data: {
+      "prayerId": id,
+      "content": message,
+    });
+    return await findPrayer(id);
   }
 }

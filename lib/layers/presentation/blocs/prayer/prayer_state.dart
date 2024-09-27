@@ -50,8 +50,9 @@ class PrayingLoadedState extends PrayerState {
 
 class PrayerFoundState extends PrayerState {
   final Prayer prayer;
+  final List<Prayer>? prayers;
 
-  const PrayerFoundState({required this.prayer});
+  const PrayerFoundState({required this.prayer, this.prayers});
 }
 
 class PrayerNotFoundState extends PrayerState {

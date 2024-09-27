@@ -5,7 +5,7 @@ class RemovePrayer {
 
   RemovePrayer({required this.repository});
 
-  Future<bool> call(String id) async {
+  Future<bool> call(int id) async {
     return await repository.removePrayer(id);
   }
 }

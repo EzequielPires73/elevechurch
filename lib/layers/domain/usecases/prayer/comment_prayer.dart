@@ -1,12 +1,12 @@
 import 'package:elevechurch/layers/domain/entities/prayer.dart';
 import 'package:elevechurch/layers/domain/repositories/prayer_repository.dart';
 
-class FindPrayer {
+class CommentPrayer {
   final PrayerRepository repository;
 
-  FindPrayer({required this.repository});
+  CommentPrayer({required this.repository});
 
-  Future<Prayer> call(int id) async {
-    return await repository.findPrayer(id);
+  Future<Prayer> call(int id, String message) async {
+    return await repository.commentPrayer(id, message);
   }
 }

@@ -3,6 +3,7 @@ import 'package:elevechurch/layers/data/repositories/prayer_repository_imp.dart'
 import 'package:elevechurch/layers/domain/repositories/prayer_repository.dart';
 import 'package:elevechurch/layers/domain/usecases/auth/load_user.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/change_praying.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/comment_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/create_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_my_prayers.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_prayer.dart';
@@ -109,6 +110,10 @@ Future<void> init() async {
     () => FindMyPrayers(repository: sl()),
   );
 
+  sl.registerLazySingleton<CommentPrayer>(
+    () => CommentPrayer(repository: sl()),
+  );
+
   sl.registerLazySingleton<FindPraying>(
     () => FindPraying(repository: sl()),
   );
@@ -141,6 +146,7 @@ Future<void> init() async {
       findPraying: sl(),
       changePraying: sl(),
       findMyPrayers: sl(),
+      commentPrayer: sl(),
     ),
   );
 }

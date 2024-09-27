@@ -94,6 +94,11 @@ class _PrayersPageState extends State<PrayersPage> {
                 setState(() {
                   cardLoading = state.id;
                 });
+              } else if (state is PrayerFoundState) {
+                setState(() {
+                  cardLoading = null;
+                  prayers = state.prayers ?? prayers;
+                });
               }
             },
             child: SliverPadding(

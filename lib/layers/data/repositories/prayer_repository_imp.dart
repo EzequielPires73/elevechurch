@@ -32,7 +32,7 @@ class PrayerRepositoryImp extends PrayerRepository {
   }
 
   @override
-  Future<Prayer> findPrayer(String id) async {
+  Future<Prayer> findPrayer(int id) async {
     try {
       final response = await datasource.findPrayer(id);
       return response.toEntity();
@@ -72,12 +72,12 @@ class PrayerRepositoryImp extends PrayerRepository {
   }
 
   @override
-  Future<bool> removePrayer(String id) {
+  Future<bool> removePrayer(int id) {
     throw UnimplementedError();
   }
 
   @override
-  Future<Prayer> updatePrayer(String id, Prayer prayer) {
+  Future<Prayer> updatePrayer(int id, Prayer prayer) {
     throw UnimplementedError();
   }
 
@@ -85,6 +85,16 @@ class PrayerRepositoryImp extends PrayerRepository {
   Future<Prayer> changePraying(int id) async {
     try {
       final response = await datasource.changePraying(id);
+      return response;
+    } on ServerException catch (e) {
+      throw ServerFailure(message: e.message);
+    }
+  }
+
+  @override
+  Future<Prayer> commentPrayer(int id, String message) async {
+    try {
+      final response = await datasource.commentPrayer(id, message);
       return response;
     } on ServerException catch (e) {
       throw ServerFailure(message: e.message);

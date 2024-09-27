@@ -1,5 +1,6 @@
 import 'package:elevechurch/layers/domain/entities/prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/change_praying.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer/comment_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/create_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_my_prayers.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_prayer.dart';
@@ -22,6 +23,7 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
   final FindPrayersByReason findPrayersByReason;
   final FindPraying findPraying;
   final ChangePraying changePraying;
+  final CommentPrayer commentPrayer;
 
   PrayerBloc({
     required this.createPrayer,
@@ -33,6 +35,7 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     required this.findPrayersByReason,
     required this.findPraying,
     required this.changePraying,
+    required this.commentPrayer,
   }) : super(const PrayerInitialState()) {
     on<LoadPrayersEvent>(_loadPrayersEvent);
     on<LoadPrayingEvent>(_loadPrayingEvent);
@@ -42,6 +45,7 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     on<FindPrayerEvent>(_findPrayerEvent);
     on<DeletePrayerEvent>(_deletePrayerEvent);
     on<ChangePrayingEvent>(_changePrayingEvent);
+    on<CommentPrayerEvent>(_commentPrayerEvent);
   }
 
   Future<void> _loadPrayersEvent(
@@ -134,10 +138,29 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
       } else if (event.listPraying == true) {
         List<Prayer> prayers = await findPraying.call();
         emit(PrayingLoadedState(prayers: prayers));
+      } else if (event.viewPrayer == true) {
+        List<Prayer> prayers = await findPrayers.call();
+        Prayer prayer = await findPrayer(event.id);
+        emit(PrayerFoundState(prayer: prayer, prayers: prayers));
       } else {
         List<Prayer> prayers = await findPrayers.call();
         emit(PrayersLoadedState(prayers: prayers));
       }
+    } catch (e) {
+      emit(PrayerErrorState(error: e.toString()));
+    }
+  }
+
+  Future<void> _commentPrayerEvent(
+      CommentPrayerEvent event, Emitter<PrayerState> emit) async {
+    emit(PrayerLoadingState());
+    try {
+      final prayer = await commentPrayer.call(
+        event.id,
+        event.message,
+      );
+
+      emit(PrayerFoundState(prayer: prayer));
     } catch (e) {
       emit(PrayerErrorState(error: e.toString()));
     }
