@@ -7,6 +7,7 @@ import 'package:elevechurch/layers/presentation/blocs/auth/auth_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_event.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_state.dart';
+import 'package:elevechurch/layers/presentation/screens/prayers/create_prayer_page.dart';
 import 'package:elevechurch/layers/presentation/widgets/cards/card_prayer_comment.dart';
 import 'package:elevechurch/layers/presentation/widgets/not_found.dart';
 import 'package:flutter/material.dart';
@@ -80,11 +81,22 @@ class _ViewPrayerPageState extends State<ViewPrayerPage> {
         ),
         actions: isMyPraying
             ? [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
                 IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.delete_outline)),
+                    onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CreatePrayerPage(),
+                        )),
+                    icon: const Icon(Icons.edit_outlined)),
+                IconButton(
+                    onPressed: () => _showConfirmDialog(context, 'Remover'),
+                    icon: const Icon(Icons.delete_outline)),
               ]
-            : null,
+            : [
+                IconButton(
+                    onPressed: () => _showConfirmDialog(context, 'Reportar'),
+                    icon: const Icon(Icons.report_outlined)),
+              ],
       ),
       body: BlocListener<PrayerBloc, PrayerState>(
         listener: (context, state) {
@@ -249,13 +261,8 @@ class _ViewPrayerPageState extends State<ViewPrayerPage> {
                   Expanded(
                     child: TextFormField(
                       controller: message,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Adicione um comentário',
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide.none),
                       ),
                       onTapOutside: (event) => FocusScope.of(context).unfocus(),
                     ),
@@ -289,6 +296,41 @@ class _ViewPrayerPageState extends State<ViewPrayerPage> {
           );
         },
       ),
+    );
+  }
+
+  void _showConfirmDialog(BuildContext context, String action) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            '$action pedido de oração',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+          content: Text('Você tem certeza que deseja $action?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fechar o diálogo
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fechar o diálogo
+                // Lógica para remover ou reportar
+                if (action == 'Remover') {
+                  // Coloque a lógica de reportar aqui
+                } else if (action == 'Reportar') {
+                  // Coloque a lógica de reportar aqui
+                }
+              },
+              child: const Text('Confirmar'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

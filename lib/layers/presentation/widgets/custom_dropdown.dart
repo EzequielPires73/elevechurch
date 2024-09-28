@@ -1,3 +1,4 @@
+import 'package:elevechurch/core/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -32,6 +33,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -55,23 +57,38 @@ class _CustomDropdownState extends State<CustomDropdown> {
                 DropdownMenu(
                   expandedInsets: const EdgeInsets.all(0),
                   hintText: widget.hintText ?? 'Selecione uma opção',
-                  inputDecorationTheme: InputDecorationTheme(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          const BorderSide(width: 1, color: Colors.black12),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          const BorderSide(width: 1, color: Colors.black87),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide:
-                          const BorderSide(width: 1, color: Colors.black12),
-                    ),
-                  ),
+                  inputDecorationTheme: isDark
+                      ? InputDecorationTheme(
+                          hintStyle:
+                              const TextStyle(fontWeight: FontWeight.w400),
+                          filled: true,
+                          fillColor: CustomColors.cardColor,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(width: 0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(width: 0),
+                          ),
+                        )
+                      : InputDecorationTheme(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                                width: 1, color: Colors.black12),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                                width: 1, color: Colors.black87),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(
+                                width: 1, color: Colors.black12),
+                          ),
+                        ),
                   onSelected: (value) {
                     setState(() {
                       _selectedValue = value;

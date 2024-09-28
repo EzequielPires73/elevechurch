@@ -64,19 +64,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
           onTapOutside: (event) => FocusScope.of(context).unfocus(),
           decoration: InputDecoration(
             hintText: widget.hintText ?? 'Insira sua senha',
-            hintStyle: const TextStyle(fontWeight: FontWeight.w400),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(width: 1, color: Colors.black12),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(width: 1, color: Colors.black87),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(width: 1, color: Colors.black12),
-            ),
             suffixIcon: widget.obscureText
                 ? IconButton(
                     icon: Icon(

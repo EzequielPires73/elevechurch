@@ -26,7 +26,6 @@ class CardPrayerComment extends StatelessWidget {
             top: 0,
             right: 0,
             child: PopupMenuButton<String>(
-              color: Colors.white,
               onSelected: (String result) {
                 switch (result) {
                   case 'Remover':

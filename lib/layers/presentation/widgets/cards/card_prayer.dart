@@ -1,4 +1,5 @@
 import 'package:elevechurch/core/helpers/date.dart';
+import 'package:elevechurch/core/utils/custom_colors.dart';
 import 'package:elevechurch/layers/data/repositories/prayer_repository_imp.dart';
 import 'package:elevechurch/layers/domain/entities/prayer.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_bloc.dart';
@@ -172,8 +173,9 @@ class CardPrayerSkeleton extends StatelessWidget {
     final isDark = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Shimmer.fromColors(
-      baseColor: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-      highlightColor: isDark ? Colors.grey.shade500 : Colors.grey.shade100,
+      baseColor: isDark ? CustomColors.cardColor : Colors.grey.shade300,
+      highlightColor:
+          isDark ? CustomColors.scaffoldColor : Colors.grey.shade100,
       child: Card.filled(
         clipBehavior: Clip.antiAlias,
         margin: EdgeInsets.zero,

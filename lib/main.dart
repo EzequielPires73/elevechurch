@@ -1,3 +1,5 @@
+import 'package:elevechurch/core/utils/custom_colors.dart';
+import 'package:elevechurch/core/utils/themes.dart';
 import 'package:elevechurch/injections.dart' as di;
 import 'package:elevechurch/layers/presentation/blocs/auth/auth_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/auth/auth_event.dart';
@@ -15,8 +17,22 @@ void main() async {
   runApp(const App());
 }
 
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   const App({super.key});
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> {
+  ThemeMode themeMode = ThemeMode.system;
+  bool get useLightMode => switch (themeMode) {
+        ThemeMode.system =>
+          View.of(context).platformDispatcher.platformBrightness ==
+              Brightness.light,
+        ThemeMode.light => true,
+        ThemeMode.dark => false
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -34,27 +50,10 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
           title: 'Eleve Church',
+          themeMode: themeMode,
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
-              scaffoldBackgroundColor: Colors.grey[100],
-              useMaterial3: true,
-              appBarTheme: const AppBarTheme(
-                backgroundColor: Colors.white,
-                surfaceTintColor: Colors.white,
-                shadowColor: Colors.black38,
-                elevation: 4,
-              ),
-              cardTheme: const CardTheme(
-                color: Colors.white,
-              ),
-              navigationBarTheme: const NavigationBarThemeData(
-                backgroundColor: Colors.white,
-              ),
-              bottomAppBarTheme: const BottomAppBarTheme(
-                color: Colors.white,
-                surfaceTintColor: Colors.white,
-              )),
+          theme: lightTheme,
+          darkTheme: darkTheme,
           home: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
               if (state is AuthenticatedState) {

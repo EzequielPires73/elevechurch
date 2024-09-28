@@ -91,7 +91,6 @@ class _CreateUserPageState extends State<CreateUserPage> {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
           'Cadastrar conta',
@@ -135,7 +134,6 @@ class _CreateUserPageState extends State<CreateUserPage> {
       ),
       bottomSheet: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) => BottomAppBar(
-          color: Colors.white,
           child: ButtonPrimary(onPressed: _submit, title: 'Cadastrar'),
         ),
       ),
