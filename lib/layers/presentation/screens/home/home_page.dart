@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
           ),
           const SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 8,
               ),

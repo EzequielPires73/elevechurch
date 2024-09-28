@@ -49,9 +49,16 @@ class ChangePrayingEvent extends PrayerEvent {
   });
 }
 
-class CommentPrayerEvent extends PrayerEvent {
+class CreatePrayerCommentEvent extends PrayerEvent {
   final int id;
   final String message;
 
-  CommentPrayerEvent({required this.id, required this.message});
+  CreatePrayerCommentEvent({required this.id, required this.message});
+}
+
+class RemovePrayerCommentEvent extends PrayerEvent {
+  final int prayerId;
+  final int commentId;
+
+  RemovePrayerCommentEvent({required this.prayerId, required this.commentId});
 }

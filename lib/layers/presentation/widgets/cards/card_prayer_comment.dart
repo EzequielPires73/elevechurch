@@ -1,10 +1,19 @@
 import 'package:elevechurch/core/helpers/date.dart';
 import 'package:elevechurch/layers/domain/entities/prayer.dart';
+import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_bloc.dart';
+import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CardPrayerComment extends StatelessWidget {
+  final int prayerId;
+  final int? userId;
   final PrayerComment comment;
-  const CardPrayerComment({super.key, required this.comment});
+  const CardPrayerComment(
+      {super.key,
+      required this.comment,
+      required this.prayerId,
+      required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +29,6 @@ class CardPrayerComment extends StatelessWidget {
               color: Colors.white,
               onSelected: (String result) {
                 switch (result) {
-                  case 'Editar':
-                    // Lógica para editar
-                    break;
                   case 'Remover':
                     _showConfirmDialog(context, 'Remover');
                     break;
@@ -31,20 +37,19 @@ class CardPrayerComment extends StatelessWidget {
                     break;
                 }
               },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(
-                  value: 'Editar',
-                  child: Text('Editar'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'Remover',
-                  child: Text('Remover'),
-                ),
-                const PopupMenuItem<String>(
-                  value: 'Reportar',
-                  child: Text('Reportar'),
-                ),
-              ],
+              itemBuilder: (BuildContext context) => userId == comment.user?.id
+                  ? [
+                      const PopupMenuItem<String>(
+                        value: 'Remover',
+                        child: Text('Remover'),
+                      ),
+                    ]
+                  : [
+                      const PopupMenuItem<String>(
+                        value: 'Reportar',
+                        child: Text('Reportar'),
+                      ),
+                    ],
               icon: const Icon(Icons.more_vert_outlined),
             ),
           ),
@@ -132,7 +137,8 @@ class CardPrayerComment extends StatelessWidget {
                 Navigator.of(context).pop(); // Fechar o diálogo
                 // Lógica para remover ou reportar
                 if (action == 'Remover') {
-                  // Coloque a lógica de remoção aqui
+                  context.read<PrayerBloc>().add(RemovePrayerCommentEvent(
+                      commentId: comment.id!, prayerId: prayerId));
                 } else if (action == 'Reportar') {
                   // Coloque a lógica de reportar aqui
                 }

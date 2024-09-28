@@ -39,7 +39,6 @@ class ApiService {
           await dio.post(endpoint, data: data, queryParameters: params);
       return response.data;
     } on DioException catch (e) {
-      print(e.response?.data);
       throw ServerException(
           message: e.response?.data['message'] ??
               e.response?.data['error'] ??
@@ -71,9 +70,12 @@ class ApiService {
     }
   }
 
-  Future<void> delete(String endpoint, {Map<String, dynamic>? params}) async {
+  Future<Map<String, dynamic>> delete(String endpoint,
+      {Map<String, dynamic>? params}) async {
     try {
-      await dio.delete(endpoint, queryParameters: params);
+      final response = await dio.delete(endpoint, queryParameters: params);
+
+      return response.data;
     } on DioException catch (e) {
       throw ServerException(
           message: e.response?.data['message'] ?? 'Erro de servidor');

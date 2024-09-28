@@ -63,7 +63,7 @@ class _ViewPrayerPageState extends State<ViewPrayerPage> {
     if (message.text != '' && prayer.id != null) {
       context
           .read<PrayerBloc>()
-          .add(CommentPrayerEvent(id: prayer.id!, message: message.text));
+          .add(CreatePrayerCommentEvent(id: prayer.id!, message: message.text));
     }
   }
 
@@ -227,6 +227,8 @@ class _ViewPrayerPageState extends State<ViewPrayerPage> {
                     ? prayer.comments!
                         .map((e) => CardPrayerComment(
                               comment: e,
+                              prayerId: prayer.id!,
+                              userId: user?.id,
                             ))
                         .toList()
                     : [const NotFound(text: 'Nenhum comentário encontrado.')],

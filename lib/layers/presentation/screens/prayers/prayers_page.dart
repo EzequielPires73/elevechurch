@@ -97,6 +97,7 @@ class _PrayersPageState extends State<PrayersPage> {
               } else if (state is PrayerFoundState) {
                 setState(() {
                   cardLoading = null;
+                  isLoading = false;
                   prayers = state.prayers ?? prayers;
                 });
               }

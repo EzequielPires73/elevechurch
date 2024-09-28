@@ -1,6 +1,5 @@
 import 'package:elevechurch/layers/domain/entities/prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/change_praying.dart';
-import 'package:elevechurch/layers/domain/usecases/prayer/comment_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/create_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_my_prayers.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_prayer.dart';
@@ -9,6 +8,8 @@ import 'package:elevechurch/layers/domain/usecases/prayer/find_prayers_by_reason
 import 'package:elevechurch/layers/domain/usecases/prayer/find_praying.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/remove_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/update_prayer.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer_comment/create_prayer_comment.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer_comment/remove_prayer_comment.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_event.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,8 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
   final FindPrayersByReason findPrayersByReason;
   final FindPraying findPraying;
   final ChangePraying changePraying;
-  final CommentPrayer commentPrayer;
+  final CreatePrayerComment createPrayerComment;
+  final RemovePrayerComment removePrayerComment;
 
   PrayerBloc({
     required this.createPrayer,
@@ -35,7 +37,8 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     required this.findPrayersByReason,
     required this.findPraying,
     required this.changePraying,
-    required this.commentPrayer,
+    required this.createPrayerComment,
+    required this.removePrayerComment,
   }) : super(const PrayerInitialState()) {
     on<LoadPrayersEvent>(_loadPrayersEvent);
     on<LoadPrayingEvent>(_loadPrayingEvent);
@@ -45,7 +48,8 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     on<FindPrayerEvent>(_findPrayerEvent);
     on<DeletePrayerEvent>(_deletePrayerEvent);
     on<ChangePrayingEvent>(_changePrayingEvent);
-    on<CommentPrayerEvent>(_commentPrayerEvent);
+    on<CreatePrayerCommentEvent>(_createPrayerCommentEvent);
+    on<RemovePrayerCommentEvent>(_removePrayerCommentEvent);
   }
 
   Future<void> _loadPrayersEvent(
@@ -151,16 +155,35 @@ class PrayerBloc extends Bloc<PrayerEvent, PrayerState> {
     }
   }
 
-  Future<void> _commentPrayerEvent(
-      CommentPrayerEvent event, Emitter<PrayerState> emit) async {
+  Future<void> _createPrayerCommentEvent(
+      CreatePrayerCommentEvent event, Emitter<PrayerState> emit) async {
     emit(PrayerLoadingState());
     try {
-      final prayer = await commentPrayer.call(
+      await createPrayerComment.call(
         event.id,
         event.message,
       );
 
+      Prayer prayer = await findPrayer.call(event.id);
+
       emit(PrayerFoundState(prayer: prayer));
+    } catch (e) {
+      emit(PrayerErrorState(error: e.toString()));
+    }
+  }
+
+  Future<void> _removePrayerCommentEvent(
+      RemovePrayerCommentEvent event, Emitter<PrayerState> emit) async {
+    emit(PrayerLoadingState());
+    try {
+      await removePrayerComment.call(
+        event.commentId,
+      );
+
+      Prayer prayer = await findPrayer.call(event.prayerId);
+      List<Prayer> prayers = await findPrayers.call();
+
+      emit(PrayerFoundState(prayer: prayer, prayers: prayers));
     } catch (e) {
       emit(PrayerErrorState(error: e.toString()));
     }

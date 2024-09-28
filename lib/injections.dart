@@ -1,9 +1,11 @@
+import 'package:elevechurch/layers/data/datasources/prayer_comment_datasource.dart';
 import 'package:elevechurch/layers/data/datasources/prayer_datasouce.dart';
+import 'package:elevechurch/layers/data/repositories/prayer_comment_repository_imp.dart';
 import 'package:elevechurch/layers/data/repositories/prayer_repository_imp.dart';
+import 'package:elevechurch/layers/domain/repositories/prayer_comment_repository.dart';
 import 'package:elevechurch/layers/domain/repositories/prayer_repository.dart';
 import 'package:elevechurch/layers/domain/usecases/auth/load_user.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/change_praying.dart';
-import 'package:elevechurch/layers/domain/usecases/prayer/comment_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/create_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_my_prayers.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/find_prayer.dart';
@@ -12,6 +14,8 @@ import 'package:elevechurch/layers/domain/usecases/prayer/find_prayers_by_reason
 import 'package:elevechurch/layers/domain/usecases/prayer/find_praying.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/remove_prayer.dart';
 import 'package:elevechurch/layers/domain/usecases/prayer/update_prayer.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer_comment/create_prayer_comment.dart';
+import 'package:elevechurch/layers/domain/usecases/prayer_comment/remove_prayer_comment.dart';
 import 'package:elevechurch/layers/presentation/blocs/prayer/prayer_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:elevechurch/layers/data/datasources/user_datasource.dart';
@@ -52,6 +56,10 @@ Future<void> init() async {
     () => PrayerDatasouceImp(apiService: sl()),
   );
 
+  sl.registerLazySingleton<PrayerCommentDatasource>(
+    () => PrayerCommentDatasourceImp(apiService: sl()),
+  );
+
   // Repositories
   sl.registerLazySingleton<UserRepository>(
     () => UserRepositoryImp(datasource: sl()),
@@ -63,6 +71,10 @@ Future<void> init() async {
 
   sl.registerLazySingleton<PrayerRepository>(
     () => PrayerRepositoryImp(datasource: sl()),
+  );
+
+  sl.registerLazySingleton<PrayerCommentRepository>(
+    () => PrayerCommentRepositoryImp(datasource: sl()),
   );
 
   // Use Cases
@@ -110,8 +122,12 @@ Future<void> init() async {
     () => FindMyPrayers(repository: sl()),
   );
 
-  sl.registerLazySingleton<CommentPrayer>(
-    () => CommentPrayer(repository: sl()),
+  sl.registerLazySingleton<CreatePrayerComment>(
+    () => CreatePrayerComment(repository: sl()),
+  );
+
+  sl.registerLazySingleton<RemovePrayerComment>(
+    () => RemovePrayerComment(repository: sl()),
   );
 
   sl.registerLazySingleton<FindPraying>(
@@ -146,7 +162,8 @@ Future<void> init() async {
       findPraying: sl(),
       changePraying: sl(),
       findMyPrayers: sl(),
-      commentPrayer: sl(),
+      createPrayerComment: sl(),
+      removePrayerComment: sl(),
     ),
   );
 }
