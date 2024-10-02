@@ -1,5 +1,5 @@
-import 'package:elevechurch/core/utils/custom_colors.dart';
 import 'package:elevechurch/core/utils/themes.dart';
+import 'package:elevechurch/custom_navigator_observer.dart';
 import 'package:elevechurch/injections.dart' as di;
 import 'package:elevechurch/layers/presentation/blocs/auth/auth_bloc.dart';
 import 'package:elevechurch/layers/presentation/blocs/auth/auth_event.dart';
@@ -54,6 +54,7 @@ class _AppState extends State<App> {
           debugShowCheckedModeBanner: false,
           theme: lightTheme,
           darkTheme: darkTheme,
+          navigatorObservers: [CustomNavigatorObserver()],
           home: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
               if (state is AuthenticatedState) {

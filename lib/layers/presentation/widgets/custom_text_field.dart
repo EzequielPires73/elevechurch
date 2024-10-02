@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;

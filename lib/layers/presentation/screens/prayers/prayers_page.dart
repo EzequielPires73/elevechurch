@@ -33,13 +33,6 @@ class _PrayersPageState extends State<PrayersPage> {
     super.initState();
   }
 
-  @override
-  void didUpdateWidget(PrayersPage oldWidget) {
-    print('Entrou');
-
-    super.didUpdateWidget(oldWidget);
-  }
-
   loadPrayers() {
     context.read<PrayerBloc>().add(LoadPrayersEvent());
   }

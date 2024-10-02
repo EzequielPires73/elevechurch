@@ -30,6 +30,12 @@ class CardPrayer extends StatefulWidget {
 }
 
 class _CardPrayerState extends State<CardPrayer> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print('Página voltou a ser visível');
+  }
+
   Future<void> changePraying() async {
     context.read<PrayerBloc>().add(
           ChangePrayingEvent(
